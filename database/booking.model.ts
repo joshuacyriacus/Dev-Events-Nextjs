@@ -11,6 +11,12 @@ export interface Booking {
 
 type BookingDocument = HydratedDocument<Booking>;
 
+/**
+ * Determines whether a value is a valid email string suitable for API input.
+ *
+ * @param value - The value to validate
+ * @returns `true` if `value` is a string which, after trimming and lowercasing, matches a pragmatic email pattern (e.g., `local@domain.tld`); `false` otherwise. When `true`, narrows the type to `string`.
+ */
 function isValidEmail(value: unknown): value is string {
   if (typeof value !== "string") return false;
   const email = value.trim().toLowerCase();

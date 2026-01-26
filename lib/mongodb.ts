@@ -23,9 +23,12 @@ declare global {
 const cached = (globalThis.mongooseCache ??= { conn: null, promise: null });
 
 /**
- * Connect to MongoDB using Mongoose.
+ * Establishes and returns a cached Mongoose connection to MongoDB.
  *
- * Returns the already-established connection when available, otherwise creates one.
+ * If a connection already exists, it is returned; otherwise a new connection is initiated and cached for reuse.
+ *
+ * @returns The connected Mongoose instance. Subsequent calls reuse the cached connection.
+ * @throws The original connection error; the internal connection promise is reset on failure to allow retries.
  */
 export async function connectToDatabase(): Promise<Mongoose> {
   if (cached.conn) return cached.conn;
