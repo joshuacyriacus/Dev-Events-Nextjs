@@ -23,10 +23,22 @@ export interface Event {
 
 type EventDocument = HydratedDocument<Event>;
 
+/**
+ * Checks whether a value is a string containing at least one non-whitespace character.
+ *
+ * @param value - The value to test
+ * @returns `true` if `value` is a string with at least one non-whitespace character, `false` otherwise
+ */
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+/**
+ * Creates a URL-friendly slug from the given string.
+ *
+ * @param input - The source string to convert into a slug.
+ * @returns A lowercase slug containing only letters, numbers, and single dashes, without leading or trailing dashes.
+ */
 function slugify(input: string): string {
   return input
     .trim()
@@ -37,6 +49,13 @@ function slugify(input: string): string {
     .replace(/-{2,}/g, "-");
 }
 
+/**
+ * Normalize a date string to the stable ISO date format YYYY-MM-DD (UTC).
+ *
+ * @param input - A date string in YYYY-MM-DD or any format parseable by Date
+ * @returns The date formatted as `YYYY-MM-DD` in UTC
+ * @throws Error if `input` cannot be parsed as a valid date
+ */
 function normalizeISODate(input: string): string {
   const raw = input.trim();
 
@@ -52,6 +71,15 @@ function normalizeISODate(input: string): string {
   return parsed.toISOString().slice(0, 10);
 }
 
+/**
+ * Converts a single time token into normalized 24-hour `HH:mm` format.
+ *
+ * Accepts either 24-hour `HH:mm` or 12-hour `h:mm AM/PM` (case-insensitive) and returns the equivalent zero-padded `HH:mm`.
+ *
+ * @param part - A single time string in `HH:mm` or `h:mm AM/PM` format
+ * @returns The normalized time in `HH:mm` (24-hour) format
+ * @throws Error if `part` is not a valid 24-hour `HH:mm` or 12-hour `h:mm AM/PM` string
+ */
 function normalizeTimePart(part: string): string {
   const raw = part.trim();
 
@@ -80,6 +108,15 @@ function normalizeTimePart(part: string): string {
   );
 }
 
+/**
+ * Normalize a time or time range into 24-hour `HH:mm` format.
+ *
+ * Accepts a single time (e.g., `09:00`, `9:00 AM`) or a range separated by `-`, `–`, or `—` (e.g., `9:00 AM - 6:00 PM`).
+ *
+ * @param input - The time string or range to normalize
+ * @returns The normalized time as `HH:mm` or a range `HH:mm-HH:mm`
+ * @throws Error if the input is not a valid time or time range
+ */
 function normalizeTime(input: string): string {
   const raw = input.trim();
 
@@ -99,6 +136,12 @@ function normalizeTime(input: string): string {
   );
 }
 
+/**
+ * Validate that a value is a non-empty array of non-blank strings.
+ *
+ * @param arr - The value to validate
+ * @returns `true` if `arr` is an array with at least one element and every element is a string containing one or more non-whitespace characters, `false` otherwise.
+ */
 function nonEmptyStringArrayValidator(arr: unknown): boolean {
   return (
     Array.isArray(arr) &&
